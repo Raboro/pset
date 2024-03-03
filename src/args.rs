@@ -37,12 +37,33 @@ impl fmt::Display for Args {
 #[derive(clap::ValueEnum, Debug, Clone)]
 pub enum ProjectType {
     MobileAppExpo,
+    CliC,
+    CliRust,
+    CliPython,
+    CliJS,
+    CliTS,
+    ObsidianPlugin,
+    BasicJava,
+    BasicPython,
+    FullStackSpringBootAngular,
 }
 
 impl fmt::Display for ProjectType {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         match self {
-            ProjectType::MobileAppExpo => write!(f, "mobile app with react native and expo"),
+            ProjectType::MobileAppExpo => write!(f, "Mobile app with React Native and expo"),
+            ProjectType::CliC => write!(f, "Cli app with C"),
+            ProjectType::CliRust => write!(f, "Cli app with Rust"),
+            ProjectType::CliPython => write!(f, "Cli app with Python"),
+            ProjectType::CliJS => write!(f, "Cli app with JavaScript"),
+            ProjectType::CliTS => write!(f, "Cli app with TypeScript"),
+            ProjectType::ObsidianPlugin => write!(f, "Obsidian Plugin with TypeScript"),
+            ProjectType::BasicJava => write!(f, "Basic Java project with Maven"),
+            ProjectType::BasicPython => write!(f, "Basic Python project"),
+            ProjectType::FullStackSpringBootAngular => write!(
+                f,
+                "Full Stack Web app with Java Spring Boot Maven and Angular TypeScript in docker compose"
+            ),
         }
     }
 }
