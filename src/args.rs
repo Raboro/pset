@@ -10,6 +10,10 @@ pub struct Args {
     /// Type of the project
     #[arg(short, long, value_enum)]
     pub project_type: ProjectType,
+
+    /// Generate GitHub action for CI (ci.yml), default false
+    #[arg(short, long)]
+    pub ci: bool,
 }
 
 #[derive(clap::ValueEnum, Debug, Clone)]
