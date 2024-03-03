@@ -5,5 +5,14 @@ use clap::Parser;
 pub struct Args {
     /// Name of the project
     #[arg(short, long)]
-    pub project_name: String,
+    pub name: String,
+
+    /// Type of the project
+    #[arg(short, long, value_enum)]
+    pub project_type: ProjectType,
+}
+
+#[derive(clap::ValueEnum, Debug, Clone)]
+pub enum ProjectType {
+    MobileAppExpo,
 }
