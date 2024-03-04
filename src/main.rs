@@ -1,6 +1,7 @@
 use clap::Parser;
 
 mod args;
+mod projects;
 mod templates;
 
 fn main() {
