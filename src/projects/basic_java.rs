@@ -1,9 +1,9 @@
 use super::{BaseProject, Project};
 
-pub struct BasicJava<'a> {
-    pub base: BaseProject<'a>,
+pub struct BasicJava {
+    pub base: BaseProject,
 }
 
-impl<'a> Project for BasicJava<'a> {
+impl Project for BasicJava {
     fn build(&self) {}
 }

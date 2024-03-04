@@ -1,9 +1,9 @@
 use super::{BaseProject, Project};
 
-pub struct CliPython<'a> {
-    pub base: BaseProject<'a>,
+pub struct CliPython {
+    pub base: BaseProject,
 }
 
-impl<'a> Project for CliPython<'a> {
+impl Project for CliPython {
     fn build(&self) {}
 }

@@ -1,9 +1,9 @@
 use super::{BaseProject, Project};
 
-pub struct FullStackSpringBootAngular<'a> {
-    pub base: BaseProject<'a>,
+pub struct FullStackSpringBootAngular {
+    pub base: BaseProject,
 }
 
-impl<'a> Project for FullStackSpringBootAngular<'a> {
+impl Project for FullStackSpringBootAngular {
     fn build(&self) {}
 }

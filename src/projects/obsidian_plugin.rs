@@ -1,9 +1,9 @@
 use super::{BaseProject, Project};
 
-pub struct ObsidianPlugin<'a> {
-    pub base: BaseProject<'a>,
+pub struct ObsidianPlugin {
+    pub base: BaseProject,
 }
 
-impl<'a> Project for ObsidianPlugin<'a> {
+impl Project for ObsidianPlugin {
     fn build(&self) {}
 }

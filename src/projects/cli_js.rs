@@ -1,9 +1,9 @@
 use super::{BaseProject, Project};
 
-pub struct CliJs<'a> {
-    pub base: BaseProject<'a>,
+pub struct CliJs {
+    pub base: BaseProject,
 }
 
-impl<'a> Project for CliJs<'a> {
+impl Project for CliJs {
     fn build(&self) {}
 }

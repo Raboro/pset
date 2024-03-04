@@ -1,9 +1,11 @@
 use super::{BaseProject, Project};
 
-pub struct MobileAppExpo<'a> {
-    pub base: BaseProject<'a>,
+pub struct MobileAppExpo {
+    pub base: BaseProject,
 }
 
-impl<'a> Project for MobileAppExpo<'a> {
-    fn build(&self) {}
+impl Project for MobileAppExpo {
+    fn build(&self) {
+        self.base.build();
+    }
 }

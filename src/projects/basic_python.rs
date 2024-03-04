@@ -1,9 +1,9 @@
 use super::{BaseProject, Project};
 
-pub struct BasicPython<'a> {
-    pub base: BaseProject<'a>,
+pub struct BasicPython {
+    pub base: BaseProject,
 }
 
-impl<'a> Project for BasicPython<'a> {
+impl Project for BasicPython {
     fn build(&self) {}
 }

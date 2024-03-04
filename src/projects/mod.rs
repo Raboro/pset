@@ -1,4 +1,6 @@
-use crate::args::ProjectType;
+use std::path::PathBuf;
+
+use crate::{args::ProjectType, fs, templates};
 
 mod basic_java;
 mod basic_python;
@@ -11,10 +13,59 @@ mod full_stack_spring_boot_angular;
 mod mobile_app_expo;
 mod obsidian_plugin;
 
-pub struct BaseProject<'a> {
-    name: &'a str,
+pub struct BaseProject {
+    name: String,
     year: u16,
-    author: &'a str,
+    author: &'static str,
+}
+
+impl BaseProject {
+    pub fn new(name: String, year: u16, author: &'static str) -> Self {
+        Self { name, year, author }
+    }
+
+    pub fn build(&self) {
+        self.create_dir();
+        self.create_readme();
+        self.create_license();
+    }
+
+    fn create_dir(&self) {
+        fs::create_dir(self.name.as_str()).expect("Project Folder could not be created");
+    }
+
+    fn create_readme(&self) {
+        let readme = templates::Template::new(
+            "readme",
+            "md",
+            None,
+            templates::basics::ReadMe {
+                project_name: self.name.as_str(),
+            },
+        );
+        fs::create_file(
+            PathBuf::from("./".to_owned() + &self.name + "/readme.md"),
+            readme.render().unwrap_or_default(),
+        )
+        .expect("Readme cannot be created");
+    }
+
+    fn create_license(&self) {
+        let license = templates::Template::new(
+            "license",
+            "md",
+            None,
+            templates::basics::License {
+                year: self.year,
+                author: self.author,
+            },
+        );
+        fs::create_file(
+            PathBuf::from("./".to_owned() + &self.name + "/license.md"),
+            license.render().unwrap_or_default(),
+        )
+        .expect("License cannot be created");
+    }
 }
 
 pub trait Project {
@@ -23,7 +74,7 @@ pub trait Project {
 pub struct ProjectFactory {}
 
 impl ProjectFactory {
-    fn create(base: BaseProject<'static>, project_type: ProjectType) -> Box<dyn Project> {
+    pub fn create(base: BaseProject, project_type: ProjectType) -> Box<dyn Project> {
         match project_type {
             ProjectType::MobileAppExpo => Box::new(mobile_app_expo::MobileAppExpo { base }),
             ProjectType::CliC => Box::new(cli_c::CliC { base }),
