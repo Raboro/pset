@@ -15,5 +15,17 @@ fn main() {
         },
     );
     print!("{}", license.render().unwrap_or_default());
+
+    let readme = templates::Template::new(
+        "README",
+        "md",
+        None,
+        templates::basics::ReadMe {
+            project_name: &args.name,
+        },
+    );
+
+    println!("{}", readme.render().unwrap_or_default());
+
     println!("{}", args);
 }
