@@ -1,5 +1,7 @@
 use sailfish::TemplateOnce;
 
+pub mod basics;
+
 pub struct Template<'a, T: TemplateOnce> {
     filename: &'a str,
     file_extension: &'a str,

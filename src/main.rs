@@ -1,8 +1,7 @@
 use clap::Parser;
 
 mod args;
-
-mod template;
+mod templates;
 
 fn main() {
     let args = args::Args::parse();
