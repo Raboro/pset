@@ -1,32 +1,18 @@
 use clap::Parser;
 
+use crate::projects::{BaseProject, ProjectFactory};
+
 mod args;
+mod fs;
 mod projects;
 mod templates;
 
 fn main() {
     let args = args::Args::parse();
-    let license = templates::Template::new(
-        "license",
-        "md",
-        None,
-        templates::basics::License {
-            author: "Marius Wörfel",
-            year: 2024,
-        },
-    );
-    print!("{}", license.render().unwrap_or_default());
-
-    let readme = templates::Template::new(
-        "README",
-        "md",
-        None,
-        templates::basics::ReadMe {
-            project_name: &args.name,
-        },
+    let project = ProjectFactory::create(
+        BaseProject::new(args.name, 2024, "Marius Wörfel"),
+        args.project_type,
     );
 
-    println!("{}", readme.render().unwrap_or_default());
-
-    println!("{}", args);
+    project.build();
 }
