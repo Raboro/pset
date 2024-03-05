@@ -3,6 +3,7 @@ use std::path::PathBuf;
 use sailfish::TemplateOnce;
 
 pub mod basics;
+pub mod cli_python_main;
 
 pub struct Template<'a, T: TemplateOnce> {
     filename: &'a str,
