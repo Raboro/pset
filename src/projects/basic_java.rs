@@ -60,18 +60,18 @@ impl Project for BasicJava {
             "./{}/src/main/java/io/github/raboro/{0}",
             self.base.name
         ))
-        .expect(&format!("Cannot create {}", self.base.name));
+        .unwrap_or_else(|_| panic!("Cannot create {}", self.base.name));
 
         let file_path = &format!("src/main/java/io/github/raboro/{}", self.base.name);
         let class_name = &self.to_class_name(&self.base.name);
         let main = Template::new(
             &self.base.name,
             "java",
-            Some(&file_path),
+            Some(file_path),
             &self.base.name,
             JavaMain {
                 name: &self.base.name,
-                class_name: &class_name,
+                class_name,
             },
         );
 
