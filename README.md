@@ -1,7 +1,7 @@
 # pset
 
 ## Roadmap 
-[] basic_java \
+[/] basic_java (missing ci)\
 [x] basic_python \
 [] cli_c \
 [] cli_js \
