@@ -1,3 +1,5 @@
+use std::path::PathBuf;
+
 use sailfish::TemplateOnce;
 
 pub mod basics;
@@ -26,6 +28,16 @@ impl<'a, T: TemplateOnce> Template<'a, T> {
 
     pub fn render(self) -> Option<String> {
         self.template.render_once().ok()
+    }
+
+    pub fn to_path_buf(&self) -> PathBuf {
+        PathBuf::from(format!(
+            "./{}{}{}.{}",
+            self.file_path.unwrap_or(""),
+            if self.file_path.is_some() { "/" } else { "" },
+            self.filename,
+            self.file_extension
+        ))
     }
 }
 

@@ -1,5 +1,3 @@
-use std::path::PathBuf;
-
 use crate::{args::ProjectType, fs, templates};
 
 mod basic_java;
@@ -38,33 +36,27 @@ impl BaseProject {
         let readme = templates::Template::new(
             "readme",
             "md",
-            None,
+            Some(&self.name),
             templates::basics::ReadMe {
                 project_name: self.name.as_str(),
             },
         );
-        fs::create_file(
-            PathBuf::from("./".to_owned() + &self.name + "/readme.md"),
-            readme.render().unwrap_or_default(),
-        )
-        .expect("Readme cannot be created");
+        fs::create_file(readme.to_path_buf(), readme.render().unwrap_or_default())
+            .expect("Readme cannot be created");
     }
 
     fn create_license(&self) {
         let license = templates::Template::new(
             "license",
             "md",
-            None,
+            Some(&self.name),
             templates::basics::License {
                 year: self.year,
                 author: self.author,
             },
         );
-        fs::create_file(
-            PathBuf::from("./".to_owned() + &self.name + "/license.md"),
-            license.render().unwrap_or_default(),
-        )
-        .expect("License cannot be created");
+        fs::create_file(license.to_path_buf(), license.render().unwrap_or_default())
+            .expect("License cannot be created");
     }
 }
 
