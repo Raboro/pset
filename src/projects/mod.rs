@@ -65,7 +65,8 @@ impl BaseProject {
 pub trait Project {
     fn build(&self);
 }
-pub struct ProjectFactory {}
+
+pub struct ProjectFactory;
 
 impl ProjectFactory {
     pub fn create(base: BaseProject, project_type: ProjectType) -> Box<dyn Project> {
