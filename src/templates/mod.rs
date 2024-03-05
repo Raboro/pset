@@ -4,6 +4,7 @@ use sailfish::TemplateOnce;
 
 pub mod basics;
 pub mod cli_python_main;
+pub mod pom;
 pub mod python_main;
 
 pub struct Template<'a, T: TemplateOnce> {
