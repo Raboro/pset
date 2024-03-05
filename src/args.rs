@@ -16,20 +16,25 @@ pub struct Args {
     /// Generate GitHub action for CI (ci.yml), default false
     #[arg(short, long)]
     pub ci: bool,
+
+    /// author of the project
+    #[arg(short, long)]
+    pub author: String,
 }
 
 impl fmt::Display for Args {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         write!(
             f,
-            "Generate '{}' as {} {}",
+            "Generate '{}' as {} {} by {}",
             self.name,
             self.project_type,
             if self.ci {
                 "and with ci github action"
             } else {
                 ""
-            }
+            },
+            self.author
         )
     }
 }
