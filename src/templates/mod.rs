@@ -5,6 +5,7 @@ use sailfish::TemplateOnce;
 pub mod basics;
 pub mod cli_python_main;
 pub mod gitignores;
+pub mod java_main;
 pub mod pom;
 pub mod python_main;
 
@@ -38,12 +39,20 @@ impl<'a, T: TemplateOnce> Template<'a, T> {
     }
 
     pub fn to_path_buf(&self) -> PathBuf {
+        self.to_path_buf_as(self.filename.to_string())
+    }
+
+    pub fn to_path_buf_with_filename(&self, filename: String) -> PathBuf {
+        self.to_path_buf_as(filename)
+    }
+
+    fn to_path_buf_as(&self, filename: String) -> PathBuf {
         PathBuf::from(format!(
             "./{}/{}{}{}.{}",
             self.project_path,
             self.file_path.unwrap_or(""),
             if self.file_path.is_some() { "/" } else { "" },
-            self.filename,
+            filename,
             self.file_extension
         ))
     }
