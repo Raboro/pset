@@ -40,6 +40,7 @@ impl BaseProject {
             &self.name,
             templates::basics::ReadMe {
                 project_name: self.name.as_str(),
+                author: &self.author,
             },
         );
         fs::create_file(readme.to_path_buf(), readme.render().unwrap_or_default())

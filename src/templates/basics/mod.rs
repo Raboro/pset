@@ -11,4 +11,5 @@ pub struct License<'a> {
 #[template(path = "basics/readme.stpl")]
 pub struct ReadMe<'a> {
     pub project_name: &'a str,
+    pub author: &'a str,
 }
