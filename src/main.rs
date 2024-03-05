@@ -10,7 +10,7 @@ mod templates;
 fn main() {
     let args = args::Args::parse();
     let project = ProjectFactory::create(
-        BaseProject::new(args.name, 2024, "Marius Wörfel"),
+        BaseProject::new(args.name, 2024, args.author),
         args.project_type,
     );
 

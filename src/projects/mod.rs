@@ -14,11 +14,11 @@ mod obsidian_plugin;
 pub struct BaseProject {
     name: String,
     year: u16,
-    author: &'static str,
+    author: String,
 }
 
 impl BaseProject {
-    pub fn new(name: String, year: u16, author: &'static str) -> Self {
+    pub fn new(name: String, year: u16, author: String) -> Self {
         Self { name, year, author }
     }
 
@@ -54,7 +54,7 @@ impl BaseProject {
             &self.name,
             templates::basics::License {
                 year: self.year,
-                author: self.author,
+                author: &self.author,
             },
         );
         fs::create_file(license.to_path_buf(), license.render().unwrap_or_default())
