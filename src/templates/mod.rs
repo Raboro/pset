@@ -8,6 +8,7 @@ pub struct Template<'a, T: TemplateOnce> {
     filename: &'a str,
     file_extension: &'a str,
     file_path: Option<&'a str>,
+    project_path: &'a str,
     template: T,
 }
 
@@ -16,12 +17,14 @@ impl<'a, T: TemplateOnce> Template<'a, T> {
         filename: &'a str,
         file_extension: &'a str,
         file_path: Option<&'a str>,
+        project_path: &'a str,
         template: T,
     ) -> Self {
         Self {
             filename,
             file_extension,
             file_path,
+            project_path,
             template,
         }
     }
@@ -32,7 +35,8 @@ impl<'a, T: TemplateOnce> Template<'a, T> {
 
     pub fn to_path_buf(&self) -> PathBuf {
         PathBuf::from(format!(
-            "./{}{}{}.{}",
+            "./{}/{}{}{}.{}",
+            self.project_path,
             self.file_path.unwrap_or(""),
             if self.file_path.is_some() { "/" } else { "" },
             self.filename,

@@ -36,7 +36,8 @@ impl BaseProject {
         let readme = templates::Template::new(
             "readme",
             "md",
-            Some(&self.name),
+            None,
+            &self.name,
             templates::basics::ReadMe {
                 project_name: self.name.as_str(),
             },
@@ -49,7 +50,8 @@ impl BaseProject {
         let license = templates::Template::new(
             "license",
             "md",
-            Some(&self.name),
+            None,
+            &self.name,
             templates::basics::License {
                 year: self.year,
                 author: self.author,
