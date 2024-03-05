@@ -56,3 +56,46 @@ impl<'a, T: TemplateOnce> std::fmt::Display for Template<'a, T> {
         )
     }
 }
+
+#[cfg(test)]
+mod test {
+    use std::path::PathBuf;
+
+    use super::{basics::License, Template};
+
+    #[test]
+    fn to_path_buf_without_file_path() -> Result<(), String> {
+        let template: Template<'_, License<'_>> = Template::new(
+            "test",
+            "md",
+            None,
+            "test_dir",
+            License {
+                author: "Test",
+                year: 2000,
+            },
+        );
+        assert!(template
+            .to_path_buf()
+            .eq(&PathBuf::from("./test_dir/test.md")));
+        Ok(())
+    }
+
+    #[test]
+    fn to_path_buf_with_file_path() -> Result<(), String> {
+        let template: Template<'_, License<'_>> = Template::new(
+            "test",
+            "md",
+            Some("license"),
+            "test_dir",
+            License {
+                author: "Test",
+                year: 2000,
+            },
+        );
+        assert!(template
+            .to_path_buf()
+            .eq(&PathBuf::from("./test_dir/license/test.md")));
+        Ok(())
+    }
+}
