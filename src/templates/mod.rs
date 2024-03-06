@@ -10,6 +10,7 @@ pub mod java_main;
 pub mod pom;
 pub mod push_step;
 pub mod python_main;
+pub mod ci_step;
 
 pub struct Template<'a, T: TemplateOnce> {
     filename: &'a str,

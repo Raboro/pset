@@ -1,5 +1,7 @@
 use sailfish::TemplateOnce;
 
+use super::ci_step::CiStep;
+
 #[derive(TemplateOnce)]
 #[template(path = "ci/ci.stpl")]
 pub struct Ci {
@@ -9,7 +11,7 @@ pub struct Ci {
 
 pub struct Job {
     pub name: String,
-    pub steps: Vec<Step>,
+    pub steps: Vec<CiStep>,
 }
 
 impl Job {
@@ -19,13 +21,5 @@ impl Job {
             None => String::new(),
             Some(f) => f.to_uppercase().collect::<String>() + chars.as_str(),
         }
-    }
-}
-
-pub struct Step {}
-
-impl Step {
-    fn display(&self) -> String {
-        String::new()
     }
 }

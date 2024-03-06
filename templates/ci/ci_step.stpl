@@ -1,0 +1,8 @@
+- name: <%= name %><% if run.is_some() { %>
+        run: <%= run.unwrap().0 %><% } %><% if _if.is_some() { %>
+        if: <%= _if.unwrap() %><% } %><% if uses.is_some() { %>
+        uses: <%= uses.unwrap() %><% } %><% if with.is_some() { %>
+        with:<% for with_arg in with.unwrap().iter() { %>
+          <%= with_arg.0 %>: <%= with_arg.1 %><% } %><% } %><% if env.is_some() { %>
+        env:<% for env_arg in env.unwrap().iter() { %>
+          <%= env_arg.0 %>: <%= env_arg.1 %><% } %><% } %>
