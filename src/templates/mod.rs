@@ -3,6 +3,7 @@ use std::path::PathBuf;
 use sailfish::TemplateOnce;
 
 pub mod basics;
+pub mod ci;
 pub mod cli_python_main;
 pub mod gitignores;
 pub mod java_main;

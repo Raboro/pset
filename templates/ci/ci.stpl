@@ -1,0 +1,17 @@
+name: <%= workflow_name %>
+
+on:
+  push:
+    branches:
+      - '*'
+
+jobs: <% for job in jobs.iter() { %>
+  <%= job.name %>:
+    name: "<%= job.to_ref_name() %>"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      <% for step in job.steps.iter() { %>
+      <%= step.display() %>
+      <% } %>
+  <% } %>
