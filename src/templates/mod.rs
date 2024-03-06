@@ -4,13 +4,13 @@ use sailfish::TemplateOnce;
 
 pub mod basics;
 pub mod ci;
+pub mod ci_step;
 pub mod cli_python_main;
 pub mod gitignores;
 pub mod java_main;
 pub mod pom;
 pub mod push_step;
 pub mod python_main;
-pub mod ci_step;
 
 pub struct Template<'a, T: TemplateOnce> {
     filename: &'a str,
