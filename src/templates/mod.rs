@@ -7,6 +7,7 @@ pub mod cli_python_main;
 pub mod gitignores;
 pub mod java_main;
 pub mod pom;
+pub mod push_step;
 pub mod python_main;
 
 pub struct Template<'a, T: TemplateOnce> {
