@@ -42,7 +42,7 @@ impl Project for CliRust {
         });
         let ci = Ci {
             workflow_name: "Build".to_string(),
-            jobs: jobs,
+            jobs,
         };
 
         println!("{}", ci.render_once().unwrap());
