@@ -21,23 +21,51 @@ impl Project for CliRust {
         self.base.create_license();
         self.base.create_readme();
         */
-        let with: Vec<(String, String, Option<String>)> =
-            vec![("filter".to_string(), "fetch".to_string(), None)];
+        let with: Vec<(String, String)> = vec![("filter".to_string(), "fetch".to_string())];
 
         let env: Vec<(String, String)> = vec![("gh_token".to_string(), "token".to_string())];
         let ci_step = CiStep {
             name: "Test".to_string(),
             _if: Some("Hello there".to_string()),
-            run: Some(("Hello".to_string(), false)),
+            run: Some("Hello".to_string()),
             uses: Some("action".to_string()),
             with: Some(with),
             env: Some(env),
         };
 
-        let jobs: Vec<Job> = vec![Job {
-            name: "build".to_string(),
-            steps: vec![ci_step],
-        }];
+        let with_long: Vec<(String, String)> = vec![
+            ("filter".to_string(), "fetch".to_string()),
+            ("filter".to_string(), "decode".to_string()),
+        ];
+
+        let env_long: Vec<(String, String)> = vec![
+            ("gh_token".to_string(), "token".to_string()),
+            ("sonar_token".to_string(), "sonar_token".to_string()),
+        ];
+
+        let ci_step_big = CiStep {
+            name: "Test".to_string(),
+            _if: Some("Hello there".to_string()),
+            run: Some("Hello".to_string()),
+            uses: Some("action".to_string()),
+            with: Some(with_long),
+            env: Some(env_long),
+        };
+
+        let jobs: Vec<Job> = vec![
+            Job {
+                name: "build".to_string(),
+                steps: vec![ci_step.clone()],
+            },
+            Job {
+                name: "test".to_string(),
+                steps: vec![ci_step.clone(), ci_step.clone()],
+            },
+            Job {
+                name: "verify".to_string(),
+                steps: vec![ci_step_big],
+            },
+        ];
         let ci = Ci {
             workflow_name: "Build".to_string(),
             jobs,
