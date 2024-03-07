@@ -11,9 +11,14 @@ pub struct CiStep {
     pub env: Option<Vec<(String, String)>>,
 }
 
+#[derive(Default, Clone, Debug)]
+pub struct NoName;
+#[derive(Default, Clone, Debug)]
+pub struct Name(String);
+
 #[derive(Clone, Default, Debug)]
-pub struct CiStepBuilder {
-    name: Option<String>,
+pub struct CiStepBuilder<N> {
+    name: N,
     _if: Option<String>,
     run: Option<String>,
     uses: Option<String>,
@@ -21,14 +26,35 @@ pub struct CiStepBuilder {
     env: Option<Vec<(String, String)>>,
 }
 
-impl CiStepBuilder {
+impl CiStepBuilder<NoName> {
     pub fn new() -> Self {
         CiStepBuilder::default()
     }
+}
 
-    pub fn name(mut self, name: impl Into<String>) -> Self {
-        self.name = Some(name.into());
-        self
+impl CiStepBuilder<Name> {
+    pub fn build(self) -> CiStep {
+        CiStep {
+            name: self.name.0,
+            _if: self._if,
+            run: self.run,
+            uses: self.uses,
+            with: self.with,
+            env: self.env,
+        }
+    }
+}
+
+impl<N> CiStepBuilder<N> {
+    pub fn name(self, name: impl Into<String>) -> CiStepBuilder<Name> {
+        CiStepBuilder {
+            name: Name(name.into()),
+            _if: self._if,
+            run: self.run,
+            uses: self.uses,
+            with: self.with,
+            env: self.env,
+        }
     }
 
     pub fn _if(mut self, _if: impl Into<String>) -> Self {
@@ -67,20 +93,5 @@ impl CiStepBuilder {
     pub fn env(mut self, env: Vec<(impl Into<String> + Clone, impl Into<String> + Clone)>) -> Self {
         self.env = Some(self.map_vec_values_to_string(env));
         self
-    }
-
-    pub fn build(self) -> Option<CiStep> {
-        if self.name.is_none() {
-            return None;
-        }
-
-        Some(CiStep {
-            name: self.name.unwrap(),
-            _if: self._if,
-            run: self.run,
-            uses: self.uses,
-            with: self.with,
-            env: self.env,
-        })
     }
 }

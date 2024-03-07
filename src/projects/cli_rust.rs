@@ -80,6 +80,6 @@ impl Project for CliRust {
             .with(vec![("Test", "hello2"), ("Test2", "hello2")])
             .env(vec![("Hi", "hii")]);
         println!("{:#?}", builder);
-        println!("{}", builder.build().unwrap().render_once().unwrap());
+        println!("{}", builder.build().render_once().unwrap());
     }
 }
