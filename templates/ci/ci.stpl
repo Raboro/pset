@@ -13,5 +13,4 @@ jobs: <% for job in jobs.iter() { %>
       - uses: actions/checkout@v3
       <% for step in job.steps.iter() { %>
       <%= step.clone().render_once().unwrap() %>
-      <% } %>
-  <% } %>
+      <% } %><% } %>
