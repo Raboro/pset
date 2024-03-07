@@ -2,7 +2,7 @@ use sailfish::TemplateOnce;
 
 use crate::templates::{
     ci::{Ci, Job},
-    ci_step::CiStep,
+    ci_step::{CiStep, CiStepBuilder},
 };
 
 use super::{BaseProject, Project};
@@ -72,5 +72,14 @@ impl Project for CliRust {
         };
 
         println!("{}", ci.render_once().unwrap());
+        let builder = CiStepBuilder::new()
+            .name("Test")
+            ._if("is null")
+            .run("npm test")
+            .uses("checkout")
+            .with(vec![("Test", "hello2"), ("Test2", "hello2")])
+            .env(vec![("Hi", "hii")]);
+        println!("{:#?}", builder);
+        println!("{}", builder.build().unwrap().render_once().unwrap());
     }
 }
