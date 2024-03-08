@@ -2,8 +2,8 @@ use sailfish::TemplateOnce;
 
 use crate::templates::{
     ci::CiBuilder,
-    ci_step::{CiStep, CiStepBuilder},
     ci_job::{CiJob, CiJobBuilder},
+    ci_step::{CiStep, CiStepBuilder},
 };
 
 use super::{BaseProject, Project};
