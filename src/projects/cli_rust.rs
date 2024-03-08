@@ -3,7 +3,7 @@ use sailfish::TemplateOnce;
 use crate::templates::{
     ci::CiBuilder,
     ci_step::{CiStep, CiStepBuilder},
-    job::{Job, JobBuilder},
+    ci_job::{CiJob, CiJobBuilder},
 };
 
 use super::{BaseProject, Project};
@@ -53,16 +53,16 @@ impl Project for CliRust {
             env: Some(env_long),
         };
 
-        let jobs: Vec<Job> = vec![
-            Job {
+        let jobs: Vec<CiJob> = vec![
+            CiJob {
                 name: "build".to_string(),
                 steps: vec![ci_step.clone()],
             },
-            Job {
+            CiJob {
                 name: "test".to_string(),
                 steps: vec![ci_step.clone(), ci_step.clone()],
             },
-            Job {
+            CiJob {
                 name: "verify".to_string(),
                 steps: vec![ci_step_big],
             },
@@ -91,7 +91,7 @@ impl Project for CliRust {
 
         println!("\n\n{}", ci.build().render_once().unwrap());
 
-        let job = JobBuilder::new()
+        let job = CiJobBuilder::new()
             .name("Test")
             .init_step(CiStepBuilder::new().name("test").run("npm test").build())
             .add_step(

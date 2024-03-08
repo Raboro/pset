@@ -1,12 +1,12 @@
 use super::ci_step::CiStep;
 
 #[derive(Clone, Default, Debug)]
-pub struct Job {
+pub struct CiJob {
     pub name: String,
     pub steps: Vec<CiStep>,
 }
 
-impl Job {
+impl CiJob {
     pub fn to_ref_name(&self) -> String {
         let mut chars = self.name.chars();
         match chars.next() {
@@ -26,43 +26,43 @@ pub struct NoSteps;
 pub struct Steps(Vec<CiStep>);
 
 #[derive(Clone, Default, Debug)]
-pub struct JobBuilder<N, S> {
+pub struct CiJobBuilder<N, S> {
     name: N,
     steps: S,
 }
 
-impl JobBuilder<NoName, NoSteps> {
+impl CiJobBuilder<NoName, NoSteps> {
     pub fn new() -> Self {
-        JobBuilder::default()
+        CiJobBuilder::default()
     }
 }
 
-impl JobBuilder<Name, Steps> {
-    pub fn build(self) -> Job {
-        Job {
+impl CiJobBuilder<Name, Steps> {
+    pub fn build(self) -> CiJob {
+        CiJob {
             name: self.name.0,
             steps: self.steps.0,
         }
     }
 }
 
-impl<N, S> JobBuilder<N, S> {
-    pub fn name(self, name: impl Into<String>) -> JobBuilder<Name, S> {
-        JobBuilder {
+impl<N, S> CiJobBuilder<N, S> {
+    pub fn name(self, name: impl Into<String>) -> CiJobBuilder<Name, S> {
+        CiJobBuilder {
             name: Name(name.into()),
             steps: self.steps,
         }
     }
 
-    pub fn init_step(self, ci_step: CiStep) -> JobBuilder<N, Steps> {
-        JobBuilder {
+    pub fn init_step(self, ci_step: CiStep) -> CiJobBuilder<N, Steps> {
+        CiJobBuilder {
             name: self.name,
             steps: Steps(vec![ci_step]),
         }
     }
 }
 
-impl<N> JobBuilder<N, Steps> {
+impl<N> CiJobBuilder<N, Steps> {
     pub fn add_step(mut self, ci_step: CiStep) -> Self {
         self.steps.0.push(ci_step);
         self
