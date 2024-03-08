@@ -6,7 +6,7 @@
 [] cli_c \
 [] cli_js \
 [x] cli_python \
-[/] cli_rust (missing ci) \
+[x] cli_rust \
 [] cli_ts \
 [] full_stack_spring_boot_angular \
 [] mobile_app_expo \
