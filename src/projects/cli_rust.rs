@@ -93,7 +93,7 @@ impl Project for CliRust {
 
         let job = JobBuilder::new()
             .name("Test")
-            .add_step(CiStepBuilder::new().name("test").run("npm test").build())
+            .init_step(CiStepBuilder::new().name("test").run("npm test").build())
             .add_step(
                 CiStepBuilder::new()
                     .name("build")
