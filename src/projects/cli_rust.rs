@@ -85,7 +85,9 @@ impl Project for CliRust {
 
         let ci = CiBuilder::new()
             .workflow_name("Build")
-            .add_job(jobs.get(0).unwrap().to_owned());
+            .init_jobs(jobs.get(0).unwrap().to_owned())
+            .add_job(jobs.get(2).unwrap().to_owned());
+
         println!("\n\n{}", ci.build().render_once().unwrap());
     }
 }
