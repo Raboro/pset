@@ -1,6 +1,6 @@
 use sailfish::TemplateOnce;
 
-#[derive(TemplateOnce, Clone)]
+#[derive(TemplateOnce, Clone, Default, Debug)]
 #[template(path = "ci/ci_step.stpl")]
 pub struct CiStep {
     pub name: String,

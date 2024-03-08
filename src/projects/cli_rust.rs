@@ -1,7 +1,7 @@
 use sailfish::TemplateOnce;
 
 use crate::templates::{
-    ci::{Ci, Job},
+    ci::{CiBuilder, Job},
     ci_step::{CiStep, CiStepBuilder},
 };
 
@@ -66,12 +66,7 @@ impl Project for CliRust {
                 steps: vec![ci_step_big],
             },
         ];
-        let ci = Ci {
-            workflow_name: "Build".to_string(),
-            jobs,
-        };
 
-        println!("{}", ci.render_once().unwrap());
         let builder = CiStepBuilder::new()
             .name("Test")
             ._if("is null")
@@ -87,5 +82,10 @@ impl Project for CliRust {
             .run("npm run dev");
         println!("{:#?}", builder2);
         println!("{}", builder2.build().render_once().unwrap());
+
+        let ci = CiBuilder::new()
+            .workflow_name("Build")
+            .add_job(jobs.get(0).unwrap().to_owned());
+        println!("\n\n{}", ci.build().render_once().unwrap());
     }
 }
