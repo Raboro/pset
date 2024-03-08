@@ -1,4 +1,4 @@
-name: <%= workflow_name %>
+name: "<%= workflow_name %>"
 
 on:
   push:
