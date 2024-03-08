@@ -3,7 +3,7 @@ use sailfish::TemplateOnce;
 use crate::templates::{
     ci::CiBuilder,
     ci_step::{CiStep, CiStepBuilder},
-    job::Job,
+    job::{Job, JobBuilder},
 };
 
 use super::{BaseProject, Project};
@@ -90,5 +90,17 @@ impl Project for CliRust {
             .add_job(jobs.get(2).unwrap().to_owned());
 
         println!("\n\n{}", ci.build().render_once().unwrap());
+
+        let job = JobBuilder::new()
+            .name("Test")
+            .add_step(CiStepBuilder::new().name("test").run("npm test").build())
+            .add_step(
+                CiStepBuilder::new()
+                    .name("build")
+                    .run("npm  run build")
+                    .build(),
+            );
+
+        println!("{:#?}", job.build());
     }
 }
