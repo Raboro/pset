@@ -1,6 +1,14 @@
 use crate::{
     fs,
-    templates::{gitignores::GitIgnoreJava, java_main::JavaMain, pom::Pom, Template},
+    templates::{
+        ci::{Ci, CiBuilder},
+        ci_job::CiJobBuilder,
+        ci_step::CiStepBuilder,
+        gitignores::GitIgnoreJava,
+        java_main::JavaMain,
+        pom::Pom,
+        Template,
+    },
 };
 
 use super::{BaseProject, Project};
@@ -80,5 +88,93 @@ impl Project for BasicJava {
             main.render().unwrap_or_default(),
         )
         .expect("Pom cannot be generated");
+
+        fs::create_dir(&format!("./{}/.github", self.base.name))
+            .expect(".github folder cannot be generated");
+        fs::create_dir(&format!("./{}/.github/workflows", self.base.name))
+            .expect("workflows folder cannot be generated");
+
+        let ci: Ci = CiBuilder::new()
+            .workflow_name("CI")
+            .init_jobs(
+                CiJobBuilder::new()
+                    .name("build")
+                    .init_step(
+                        CiStepBuilder::new()
+                            .name("Set up JDK 17")
+                            .uses("actions/setup-java@v3")
+                            .with(vec![
+                                ("java-version", "17"),
+                                ("distribution", "temurin"),
+                                ("cache", "maven"),
+                            ])
+                            .build(),
+                    )
+                    .add_step(
+                        CiStepBuilder::new()
+                            .name("Build with Maven")
+                            .run("mvn -B package --file pom.xml")
+                            .build(),
+                    )
+                    .build(),
+            )
+            .add_job(
+                CiJobBuilder::new()
+                    .name("sonar")
+                    .init_step(
+                        CiStepBuilder::new()
+                            .name("checkout")
+                            .uses("actions/checkout@v3")
+                            .with(vec![("fetch-depth", "0")])
+                            .build(),
+                    )
+                    .add_step(
+                        CiStepBuilder::new()
+                            .name("Set up JDK 17")
+                            .uses("actions/setup-java@v3")
+                            .with(vec![
+                                ("java-version", "17"),
+                                ("distribution", "temurin"),
+                                ("cache", "maven"),
+                            ])
+                            .build(),
+                    )
+                    .add_step(
+                        CiStepBuilder::new()
+                            .name("Cache SonarCloud packages")
+                            .uses("actions/cache@v3")
+                            .with(vec![
+                                ("path", "~/.sonar/cache"),
+                                ("key", "${{ runner.os }}-sonar"),
+                                ("restore-keys", "${{ runner.os }}-sonar"),
+                            ])
+                            .build(),
+                    )
+                    .add_step(
+                        CiStepBuilder::new()
+                            .name("Cache Maven packages")
+                            .uses("actions/cache@v3")
+                            .with(vec![
+                                ("path", "~/.m2"),
+                                ("key", "${{ runner.os }}-m2-${{ hashFiles(**/pom.xml) }}"),
+                                ("restore-keys", "${{ runner.os }}-m2"),
+                            ])
+                            .build(),
+                    )
+                    .add_step(
+                        CiStepBuilder::new()
+                            .name("Build and analyze with Sonar")
+                            .run(format!("mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=Raboro_{}", self.base.name))
+                            .env(vec![("GITHUB_TOKEN", "${{ secrets.GITHUB_TOKEN }}"), ("SONAR_TOKEN", "${{ secrets.SONAR_TOKEN }}")])
+                            .build(),
+                    )
+                    .build(),
+            )
+            .build();
+
+        let ci_template =
+            Template::new("ci", "yml", Some(".github/workflows"), &self.base.name, ci);
+        fs::create_file(ci_template.to_path_buf(), ci_template.render().unwrap())
+            .expect("Ci cannot be created");
     }
 }
