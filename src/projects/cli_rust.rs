@@ -51,7 +51,7 @@ impl Project for CliRust {
                             .build(),
                     )
                     .add_step(CiStepBuilder::new().name("Format").run("cargo fmt").build())
-                    .add_step(CiStepBuilder::new().name("Commit changes").run("|\n          git config user.name github-actions[bot]\n          git config user.email github-actions[bot]@users.noreply.github.com\n          git commit -am formatted and clippy || true").build())
+                    .add_step(CiStepBuilder::new().name("Commit changes").run("|\n          git config user.name github-actions[bot]\n          git config user.email github-actions[bot]@users.noreply.github.com\n          git commit -am 'formatted and clippy' || true").build())
                     .add_step(
                         CiStepBuilder::new()
                             .name("Push changes")
@@ -78,7 +78,10 @@ impl Project for CliRust {
         let ci_template =
             Template::new("ci", "yml", Some(".github/workflows"), &self.base.name, ci);
 
-        fs::create_file(ci_template.to_path_buf(), ci_template.render().unwrap())
-            .expect("Ci cannot be generated");
+        fs::create_file(
+            ci_template.to_path_buf(),
+            ci_template.render().unwrap().replace("&amp;#039;", "'"), // sailfish cannot render ' correctly
+        )
+        .expect("Ci cannot be generated");
     }
 }
