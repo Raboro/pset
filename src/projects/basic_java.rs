@@ -52,23 +52,10 @@ impl Project for BasicJava {
         )
         .expect("Gitignore cannot be generated");
 
-        fs::create_dir(&format!("./{}/src", self.base.name)).expect("Cannot create src");
-        fs::create_dir(&format!("./{}/src/main", self.base.name)).expect("Cannot create main");
-        fs::create_dir(&format!("./{}/src/main/java", self.base.name)).expect("Cannot create java");
-        fs::create_dir(&format!("./{}/src/main/java/io", self.base.name))
-            .expect("Cannot create io");
-        fs::create_dir(&format!("./{}/src/main/java/io/github", self.base.name))
-            .expect("Cannot create github");
-        fs::create_dir(&format!(
-            "./{}/src/main/java/io/github/raboro",
-            self.base.name
-        ))
-        .expect("Cannot create github");
-        fs::create_dir(&format!(
-            "./{}/src/main/java/io/github/raboro/{0}",
-            self.base.name
-        ))
-        .unwrap_or_else(|_| panic!("Cannot create {}", self.base.name));
+        fs::create_nested_dirs(
+            &format!("src/main/java/io/github/raboro/{0}", self.base.name),
+            &self.base.name,
+        );
 
         let file_path = &format!("src/main/java/io/github/raboro/{}", self.base.name);
         let class_name = &self.to_class_name(&self.base.name);
