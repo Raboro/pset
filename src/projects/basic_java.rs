@@ -139,7 +139,7 @@ impl Project for BasicJava {
                             .uses("actions/cache@v3")
                             .with(vec![
                                 ("path", "~/.m2"),
-                                ("key", "${{ runner.os }}-m2-${{ hashFiles(**/pom.xml) }}"),
+                                ("key", "${{ runner.os }}-m2-${{ 'hashFiles(**/pom.xml)' }}"),
                                 ("restore-keys", "${{ runner.os }}-m2"),
                             ])
                             .build(),
@@ -159,7 +159,11 @@ impl Project for BasicJava {
 
         let ci_template =
             Template::new("ci", "yml", Some(".github/workflows"), &self.base.name, ci);
-        fs::create_file(ci_template.to_path_buf(), ci_template.render().unwrap())
-            .expect("Ci cannot be created");
+
+        fs::create_file(
+            ci_template.to_path_buf(),
+            ci_template.render().unwrap().replace("&amp;#039;", "'"), // sailfish cannot render ' correctly
+        )
+        .expect("Ci cannot be created");
     }
 }
