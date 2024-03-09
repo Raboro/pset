@@ -1,5 +1,7 @@
 use sailfish::TemplateOnce;
 
+use crate::fs;
+
 use super::ci_job::CiJob;
 
 #[derive(TemplateOnce)]
@@ -7,6 +9,14 @@ use super::ci_job::CiJob;
 pub struct Ci {
     pub workflow_name: String,
     pub jobs: Vec<CiJob>,
+}
+
+impl Ci {
+    pub fn create_dirs(base: &str) {
+        fs::create_dir(&format!("./{}/.github", base)).expect(".github folder cannot be generated");
+        fs::create_dir(&format!("./{}/.github/workflows", base))
+            .expect("workflows folder cannot be generated");
+    }
 }
 
 #[derive(Default, Clone, Debug)]

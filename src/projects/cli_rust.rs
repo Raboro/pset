@@ -3,7 +3,7 @@ use std::process::Command;
 use crate::{
     fs,
     templates::{
-        ci::{self, CiBuilder},
+        ci::{self, Ci, CiBuilder},
         ci_job::CiJobBuilder,
         ci_step::CiStepBuilder,
         Template,
@@ -25,11 +25,6 @@ impl Project for CliRust {
             .expect("Cannot create cargo project");
         self.base.create_license();
         self.base.create_readme();
-
-        fs::create_dir(&format!("./{}/.github", self.base.name))
-            .expect(".github folder cannot be generated");
-        fs::create_dir(&format!("./{}/.github/workflows", self.base.name))
-            .expect("workflows folder cannot be generated");
 
         let ci: ci::Ci = CiBuilder::new()
             .workflow_name("CI")
@@ -76,6 +71,8 @@ impl Project for CliRust {
                     .build(),
             )
             .build();
+
+        Ci::create_dirs(&self.base.name);
 
         let ci_template =
             Template::new("ci", "yml", Some(".github/workflows"), &self.base.name, ci);

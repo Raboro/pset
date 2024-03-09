@@ -89,11 +89,6 @@ impl Project for BasicJava {
         )
         .expect("Pom cannot be generated");
 
-        fs::create_dir(&format!("./{}/.github", self.base.name))
-            .expect(".github folder cannot be generated");
-        fs::create_dir(&format!("./{}/.github/workflows", self.base.name))
-            .expect("workflows folder cannot be generated");
-
         let ci: Ci = CiBuilder::new()
             .workflow_name("CI")
             .init_jobs(
@@ -171,6 +166,8 @@ impl Project for BasicJava {
                     .build(),
             )
             .build();
+
+        Ci::create_dirs(&self.base.name);
 
         let ci_template =
             Template::new("ci", "yml", Some(".github/workflows"), &self.base.name, ci);
