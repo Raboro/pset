@@ -3,7 +3,14 @@ use std::path::PathBuf;
 use crate::{
     fs,
     templates::{
-        ci::{Ci, CiBuilder}, ci_job::CiJobBuilder, ci_step::CiStepBuilder, eslint::CliTsEslint, gitignores::GitIgnoreCliTs, package_json::CliTsPackageJson, tsconfig::TsconfigCliTs, Template
+        ci::{Ci, CiBuilder},
+        ci_job::CiJobBuilder,
+        ci_step::CiStepBuilder,
+        eslint::CliTsEslint,
+        gitignores::GitIgnoreCliTs,
+        package_json::CliTsPackageJson,
+        tsconfig::TsconfigCliTs,
+        Template,
     },
 };
 
@@ -69,8 +76,7 @@ impl Project for CliTs {
         .add_job(
             CiJobBuilder::new()
             .name("publish")
-            .init_steps( 
-                CiStepBuilder::new()
+            .init_steps(CiStepBuilder::new()
                     .name("Checkout")
                     .uses("actions/checkout@v3")
                     .build()
@@ -145,6 +151,7 @@ impl Project for CliTs {
 
         let tsconfig = Template::new("tsconfig", "json", None, &self.base.name, TsconfigCliTs);
 
-        fs::create_file(tsconfig.to_path_buf(), tsconfig.render().unwrap()).expect("Cannot create tsconfig");
+        fs::create_file(tsconfig.to_path_buf(), tsconfig.render().unwrap())
+            .expect("Cannot create tsconfig");
     }
 }

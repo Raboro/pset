@@ -74,8 +74,7 @@ impl Project for CliJs {
             .add_job(
                 CiJobBuilder::new()
                 .name("publish")
-                .init_steps( 
-                    CiStepBuilder::new()
+                .init_steps(CiStepBuilder::new()
                         .name("Checkout")
                         .uses("actions/checkout@v3")
                         .build()
