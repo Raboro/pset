@@ -50,7 +50,7 @@ impl CiStepBuilder<Name, Run, NoUses> {
             run: Some(self.run.0),
             uses: None,
             with: None,
-            env: None,
+            env: self.env,
         }
     }
 }
@@ -84,40 +84,9 @@ impl<N, R, U> CiStepBuilder<N, R, U> {
         self._if = Some(_if.into());
         self
     }
-}
 
-impl<N, R> CiStepBuilder<N, R, NoUses> {
-    pub fn run(self, run: impl Into<String>) -> CiStepBuilder<N, Run, NoUses> {
-        CiStepBuilder {
-            name: self.name,
-            _if: self._if,
-            run: Run(run.into()),
-            uses: self.uses,
-            with: None,
-            env: None,
-        }
-    }
-}
-
-impl<N, U> CiStepBuilder<N, NoRun, U> {
-    pub fn uses(self, uses: impl Into<String>) -> CiStepBuilder<N, NoRun, Uses> {
-        CiStepBuilder {
-            name: self.name,
-            _if: self._if,
-            run: self.run,
-            uses: Uses(uses.into()),
-            with: None,
-            env: None,
-        }
-    }
-}
-
-impl<N> CiStepBuilder<N, NoRun, Uses> {
-    pub fn with(
-        mut self,
-        with: Vec<(impl Into<String> + Clone, impl Into<String> + Clone)>,
-    ) -> Self {
-        self.with = Some(self.map_vec_values_to_string(with));
+    pub fn env(mut self, env: Vec<(impl Into<String> + Clone, impl Into<String> + Clone)>) -> Self {
+        self.env = Some(self.map_vec_values_to_string(env));
         self
     }
 
@@ -130,9 +99,40 @@ impl<N> CiStepBuilder<N, NoRun, Uses> {
             .map(|element| (element.0.clone().into(), element.1.clone().into()))
             .collect()
     }
+}
 
-    pub fn env(mut self, env: Vec<(impl Into<String> + Clone, impl Into<String> + Clone)>) -> Self {
-        self.env = Some(self.map_vec_values_to_string(env));
+impl<N, R> CiStepBuilder<N, R, NoUses> {
+    pub fn run(self, run: impl Into<String>) -> CiStepBuilder<N, Run, NoUses> {
+        CiStepBuilder {
+            name: self.name,
+            _if: self._if,
+            run: Run(run.into()),
+            uses: self.uses,
+            with: None,
+            env: self.env,
+        }
+    }
+}
+
+impl<N, U> CiStepBuilder<N, NoRun, U> {
+    pub fn uses(self, uses: impl Into<String>) -> CiStepBuilder<N, NoRun, Uses> {
+        CiStepBuilder {
+            name: self.name,
+            _if: self._if,
+            run: self.run,
+            uses: Uses(uses.into()),
+            with: None,
+            env: self.env,
+        }
+    }
+}
+
+impl<N> CiStepBuilder<N, NoRun, Uses> {
+    pub fn with(
+        mut self,
+        with: Vec<(impl Into<String> + Clone, impl Into<String> + Clone)>,
+    ) -> Self {
+        self.with = Some(self.map_vec_values_to_string(with));
         self
     }
 }
