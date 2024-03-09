@@ -15,6 +15,7 @@ pub mod package_json;
 pub mod pom;
 pub mod push_step;
 pub mod python_main;
+pub mod tsconfig;
 
 pub struct Template<'a, T: TemplateOnce> {
     filename: &'a str,
