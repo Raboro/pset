@@ -1,0 +1,31 @@
+{
+  "name": "@raboro/<%= name %>",
+  "bin": "src/index.js",
+  "version": "1.0.0",
+  "description": "",
+  "main": "src/index.js",
+  "scripts": {
+    "lint:fix": "npx eslint --fix src ; exit 0",
+    "lint": "npx eslint src"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Raboro/<%= name %>.git"
+  },
+  "keywords": [
+    "CLI"
+  ],
+  "author": "Marius Wörfel",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Raboro/<%= name %>/issues"
+  },
+  "homepage": "https://github.com/Raboro/<%= name %>#readme",
+  "dependencies": {
+    "yargs": "13.2"
+  },
+  "devDependencies": {
+    "eslint": "^8.34.0",
+    "eslint-config-standard": "^17.0.0",
+  }
+}

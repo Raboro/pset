@@ -4,7 +4,7 @@
 [x] basic_java \
 [x] basic_python \
 [x] cli_c \
-[] cli_js \
+[x] cli_js \
 [x] cli_python \
 [x] cli_rust \
 [] cli_ts \
