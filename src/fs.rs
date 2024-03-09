@@ -7,12 +7,12 @@ pub fn create_dir(path: &str) -> std::io::Result<()> {
 }
 
 pub fn create_nested_dirs(full_path: &str, base: &str) {
-    let paths: Vec<&str> = full_path.split("/").collect();
+    let paths: Vec<&str> = full_path.split('/').collect();
     let mut sub_path: String = format!("./{}", base);
 
     for path in paths {
         sub_path.push_str(&format!("/{}", path));
-        fs::create_dir(&sub_path).expect(&format!("Cannot create folder {}", sub_path));
+        fs::create_dir(&sub_path).unwrap_or_else(|_| panic!("Cannot create folder {}", sub_path));
     }
 }
 
