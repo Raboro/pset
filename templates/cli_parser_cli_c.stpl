@@ -1,0 +1,15 @@
+#include <stdio.h>
+#include <string.h>
+#include <getopt.h>
+
+typedef struct cli_parse_obj
+{
+} cli_parse_obj_t;
+
+static struct option options[] = {
+    {"help", no_argument, 0, 'h'},
+    {0, 0, 0, 0}};
+
+void print_help() {}
+
+void parse(cli_parse_obj_t *cli_parse_obj, int argc, char *argv[]) {}

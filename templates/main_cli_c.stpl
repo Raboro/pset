@@ -1,0 +1,11 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+#include "cli_parser.h"
+
+int main(int argc, char *argv[])
+{
+    cli_parse_obj_t *cli_parse_obj = (cli_parse_obj_t *)malloc(sizeof(cli_parse_obj_t));
+    parse(cli_parse_obj, argc, argv);
+    return 0;
+}

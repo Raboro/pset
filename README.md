@@ -3,7 +3,7 @@
 ## Roadmap 
 [x] basic_java \
 [x] basic_python \
-[] cli_c \
+[x] cli_c \
 [] cli_js \
 [x] cli_python \
 [x] cli_rust \

@@ -1,0 +1,13 @@
+default:
+    gcc -c -o main.o src/main.c
+    gcc -c -o cli_parser.o src/cli_parser.c
+    gcc -O3 -Wall -Wextra -o <%= name %> main.o cli_parser 
+    $(MAKE) cleanup
+
+cleanup:
+    rm -f main.o 
+    rm -f cli_parser.o 
+
+run_here:
+    $(MAKE) default
+    ./<%= name %>
