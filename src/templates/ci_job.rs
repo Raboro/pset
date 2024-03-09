@@ -54,7 +54,7 @@ impl<N, S> CiJobBuilder<N, S> {
         }
     }
 
-    pub fn init_step(self, ci_step: CiStep) -> CiJobBuilder<N, Steps> {
+    pub fn init_steps(self, ci_step: CiStep) -> CiJobBuilder<N, Steps> {
         CiJobBuilder {
             name: self.name,
             steps: Steps(vec![ci_step]),

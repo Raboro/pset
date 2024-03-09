@@ -31,7 +31,7 @@ impl Project for CliRust {
             .init_jobs(
                 CiJobBuilder::new()
                     .name("build")
-                    .init_step(CiStepBuilder::new().name("Checkout").uses("actions/checkout@v3").build())
+                    .init_steps(CiStepBuilder::new().name("Checkout").uses("actions/checkout@v3").build())
                     .add_step(
                         CiStepBuilder::new()
                             .name("Check")

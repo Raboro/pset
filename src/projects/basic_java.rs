@@ -81,7 +81,7 @@ impl Project for BasicJava {
             .init_jobs(
                 CiJobBuilder::new()
                     .name("build")
-                    .init_step(CiStepBuilder::new().name("Checkout").uses("actions/checkout@v3").build())
+                    .init_steps(CiStepBuilder::new().name("Checkout").uses("actions/checkout@v3").build())
                     .add_step(
                         CiStepBuilder::new()
                             .name("Set up JDK 17")
@@ -104,7 +104,7 @@ impl Project for BasicJava {
             .add_job(
                 CiJobBuilder::new()
                     .name("sonar")
-                    .init_step(
+                    .init_steps(
                         CiStepBuilder::new()
                             .name("checkout")
                             .uses("actions/checkout@v3")
