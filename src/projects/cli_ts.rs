@@ -29,12 +29,7 @@ impl Project for CliTs {
         .init_jobs(
             CiJobBuilder::new()
                 .name("linter")
-                .init_steps(
-                    CiStepBuilder::new()
-                        .name("Checkout")
-                        .uses("actions/checkout@v3")
-                        .build(),
-                )
+                .init_steps(CiStepBuilder::checkout())
                 .add_step(
                     CiStepBuilder::new()
                         .name("Setup Node")
@@ -76,11 +71,7 @@ impl Project for CliTs {
         .add_job(
             CiJobBuilder::new()
             .name("publish")
-            .init_steps(CiStepBuilder::new()
-                    .name("Checkout")
-                    .uses("actions/checkout@v3")
-                    .build()
-            )
+            .init_steps(CiStepBuilder::checkout())
             .add_step(
                 CiStepBuilder::new()
                     .name("Setup Node")

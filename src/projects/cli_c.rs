@@ -59,12 +59,7 @@ impl Project for CliC {
                             .run("sudo apt-get install -y gcc")
                             .build(),
                     )
-                    .add_step(
-                        CiStepBuilder::new()
-                            .name("Checkout repository")
-                            .uses("actions/checkout@v3")
-                            .build(),
-                    )
+                    .add_step(CiStepBuilder::checkout())
                     .add_step(CiStepBuilder::new().name("Build").run("make").build())
                     .build(),
             )

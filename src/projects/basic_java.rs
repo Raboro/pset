@@ -81,7 +81,7 @@ impl Project for BasicJava {
             .init_jobs(
                 CiJobBuilder::new()
                     .name("build")
-                    .init_steps(CiStepBuilder::new().name("Checkout").uses("actions/checkout@v3").build())
+                    .init_steps(CiStepBuilder::checkout())
                     .add_step(
                         CiStepBuilder::new()
                             .name("Set up JDK 17")
@@ -105,12 +105,7 @@ impl Project for BasicJava {
                 CiJobBuilder::new()
                     .name("sonar")
                     .init_steps(
-                        CiStepBuilder::new()
-                            .name("checkout")
-                            .uses("actions/checkout@v3")
-                            .with(vec![("fetch-depth", "0")])
-                            .build(),
-                    )
+                        CiStepBuilder::checkout())
                     .add_step(
                         CiStepBuilder::new()
                             .name("Set up JDK 17")

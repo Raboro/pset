@@ -40,6 +40,17 @@ impl CiStepBuilder<NoName, NoRun, NoUses> {
     pub fn new() -> Self {
         CiStepBuilder::default()
     }
+
+    pub fn checkout() -> CiStep {
+        CiStep {
+            name: String::from("Checkout"),
+            _if: None,
+            run: None,
+            uses: Some(String::from("actions/checkout@v3")),
+            with: None,
+            env: None,
+        }
+    }
 }
 
 impl CiStepBuilder<Name, Run, NoUses> {
