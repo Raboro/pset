@@ -1,0 +1,13 @@
+node_modules/
+assets/
+coverage/
+app/assets/
+.vscode/
+.expo/
+.idea/
+README.md 
+LICENSE
+app.json 
+.gitignore
+package.json
+package-lock.json

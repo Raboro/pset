@@ -2,6 +2,7 @@ use std::path::PathBuf;
 
 use sailfish::TemplateOnce;
 
+pub mod babel_expo;
 pub mod basics;
 pub mod ci;
 pub mod ci_job;
@@ -11,8 +12,10 @@ pub mod cli_python_main;
 pub mod eslint;
 pub mod gitignores;
 pub mod java_main;
+pub mod jest_expo;
 pub mod package_json;
 pub mod pom;
+pub mod prettier;
 pub mod python_main;
 pub mod tsconfig;
 
