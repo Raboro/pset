@@ -54,6 +54,7 @@ impl Project for CliJs {
             &self.base.name,
             CliJsPackageJson {
                 name: &self.base.name,
+                author: &self.base.author,
             },
         );
 

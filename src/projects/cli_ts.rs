@@ -50,6 +50,7 @@ impl Project for CliTs {
             &self.base.name,
             CliTsPackageJson {
                 name: &self.base.name,
+                author: &self.base.author,
             },
         );
 

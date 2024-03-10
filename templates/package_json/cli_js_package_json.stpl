@@ -15,7 +15,7 @@
   "keywords": [
     "CLI"
   ],
-  "author": "Marius Wörfel",
+  "author": "<%= author %>",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/Raboro/<%= name %>/issues"
