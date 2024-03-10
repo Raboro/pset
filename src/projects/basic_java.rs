@@ -17,15 +17,7 @@ pub struct BasicJava {
     pub base: BaseProject,
 }
 
-impl BasicJava {
-    fn to_class_name(&self, name: &str) -> String {
-        let mut chars = name.chars();
-        match chars.next() {
-            None => String::new(),
-            Some(f) => f.to_uppercase().collect::<String>() + chars.as_str(),
-        }
-    }
-}
+impl BasicJava {}
 
 impl Project for BasicJava {
     fn build(&self) {
@@ -58,7 +50,7 @@ impl Project for BasicJava {
         );
 
         let file_path = &format!("src/main/java/io/github/raboro/{}", self.base.name);
-        let class_name = &self.to_class_name(&self.base.name);
+        let class_name = &BaseProject::cap_first_letter(&self.base.name);
         let main = Template::new(
             &self.base.name,
             "java",

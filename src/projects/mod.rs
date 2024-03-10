@@ -28,6 +28,14 @@ impl BaseProject {
         self.create_license();
     }
 
+    pub fn cap_first_letter(name: &str) -> String {
+        let mut chars = name.chars();
+        match chars.next() {
+            None => String::new(),
+            Some(first) => first.to_uppercase().collect::<String>() + chars.as_str(),
+        }
+    }
+
     fn create_dir(&self) {
         fs::create_dir(self.name.as_str()).expect("Project Folder could not be created");
     }
