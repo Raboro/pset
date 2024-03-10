@@ -2,6 +2,9 @@ use crate::{
     fs,
     templates::{
         babel_expo::BabelExpo,
+        ci::{Ci, CiBuilder},
+        ci_job::CiJobBuilder,
+        ci_step::CiStepBuilder,
         eslint::{ExpoEslint, ExpoEslintIgnore},
         gitignores::GitIgnoreExpo,
         jest_expo::JestExpoConfig,
@@ -68,5 +71,89 @@ impl Project for MobileAppExpo {
 
         fs::create_file(eslint_ignore.to_path_buf(), eslint_ignore.render().unwrap())
             .expect("Cannot create .eslintignore");
+
+        let ci = CiBuilder::new()
+            .workflow_name("CI")
+            .init_jobs(
+                CiJobBuilder::new()
+                    .name("organizeImports_lint_format_test")
+                    .init_steps(CiStepBuilder::checkout())
+                    .add_step(
+                        CiStepBuilder::new()
+                            .name("Setup bun")
+                            .uses("oven-sh/setup-bun@v1")
+                            .with(vec![("bun-version", "latest")])
+                            .build(),
+                    )
+                    .add_step(
+                        CiStepBuilder::new()
+                            .name("Install dependencies")
+                            .run("bun install")
+                            .build(),
+                    )
+                    .add_step(
+                        CiStepBuilder::new()
+                            .name("Organize imports")
+                            .run("bun run organizeImports")
+                            .build(),
+                    )
+                    .add_step(
+                        CiStepBuilder::new()
+                            .name("Fix eslint issues")
+                            .run("bun run lint:fix")
+                            .build(),
+                    )
+                    .add_step(
+                        CiStepBuilder::new()
+                            .name("Check if all eslint issues are fixed")
+                            .run("bun run lint")
+                            .build(),
+                    )
+                    .add_step(
+                        CiStepBuilder::new()
+                            .name("Format with prettier")
+                            .run("bun run format")
+                            .build(),
+                    )
+                    .add_step(CiStepBuilder::new().name("Commit changes").run("|\n          git config user.name github-actions[bot]\n          git config user.email github-actions[bot]@users.noreply.github.com\n          git commit -am 'fixed eslint issues, formatted with prettier and organized imports' || true").build())
+                    .add_step(
+                        CiStepBuilder::new()
+                            .name("Push changes")
+                            .uses("ad-m/github-push-action@master")
+                            .with(vec![
+                                ("github_token", "${{ secrets.GITHUB_TOKEN }}"),
+                                ("branch", "${{ github.ref }}"),
+                            ])
+                            .build(),
+                    )
+                    .add_step(CiStepBuilder::new().name("Setup node to run tests").uses("actions/setup-node@v3").with(vec![("node-version", "18")]).build())
+                    .add_step(CiStepBuilder::new().name("Tests with Jest").run("npm test").build())
+                    .build(),
+            )
+            .add_job(
+                CiJobBuilder::new()
+                    .name("Sonar")
+                    .init_steps(CiStepBuilder::checkout())
+                    .add_step(
+                        CiStepBuilder::new()
+                            .name("Fetch changed ts/tsx/js/ci.yml files")
+                            .uses("Ana06/get-changed-files@v2.2.0")
+                            .with(vec![("filter", "|\n            *.ts\n            *.tsx\n            *.js\n            ci.yml")])
+                            .build()
+                        )
+                    .build()
+            )
+            .build();
+
+        Ci::create_dirs(&self.base.name);
+
+        let ci_template =
+            Template::new("ci", "yml", Some(".github/workflows"), &self.base.name, ci);
+
+        fs::create_file(
+            ci_template.to_path_buf(),
+            ci_template.render().unwrap().replace("&amp;#039;", "'"), // sailfish cannot render ' correctly
+        )
+        .expect("Ci cannot be generated");
     }
 }
