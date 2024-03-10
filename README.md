@@ -10,4 +10,4 @@
 [x] cli_ts \
 [] full_stack_spring_boot_angular \
 [] mobile_app_expo \
-[] obsidian_plugin
+[x] obsidian_plugin
