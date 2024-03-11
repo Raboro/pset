@@ -9,5 +9,5 @@
 [x] cli_rust \
 [x] cli_ts \
 [] full_stack_spring_boot_angular \
-[/] mobile_app_expo \
+[x] mobile_app_expo \
 [x] obsidian_plugin

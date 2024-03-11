@@ -137,10 +137,55 @@ impl Project for MobileAppExpo {
                     .add_step(
                         CiStepBuilder::new()
                             .name("Fetch changed ts/tsx/js/ci.yml files")
+                            .id("changedFiles")
                             .uses("Ana06/get-changed-files@v2.2.0")
                             .with(vec![("filter", "|\n            *.ts\n            *.tsx\n            *.js\n            ci.yml")])
                             .build()
-                        )
+                    )
+                    .add_step(
+                        CiStepBuilder::new()
+                        .name("Check Sonar trigger")
+                        .run("|\n          if [ -n '${{ steps.changedFiles.outputs.all }}' ]; then\n            echo 'TRIGGER_SONAR=true' >> '$GITHUB_ENV'\n          else\n            echo 'TRIGGER_SONAR=false' >> 'GITHUB_ENV'\n          fi")
+                        .build()
+                    )
+                    .add_step(
+                        CiStepBuilder::new()
+                        .name("Setup bun")
+                        .uses("oven-sh/setup-bun@v1")
+                        ._if("env.TRIGGER_SONAR == 'true'")
+                        .with(vec![("bun-version", "latest")])
+                        .build()
+                    )
+                    .add_step(CiStepBuilder::new()
+                        .name("Setup node to run tests")
+                        ._if("env.TRIGGER_SONAR == 'true'")
+                        .uses("actions/setup-node@v3")
+                        .with(vec![("node-version", "18")])
+                        .build()
+                    )
+                    .add_step(
+                        CiStepBuilder::new()
+                            .name("Install dependencies")
+                            ._if("env.TRIGGER_SONAR == 'true'")
+                            .run("bun install")
+                            .build(),
+                    )
+                    .add_step(
+                        CiStepBuilder::new()
+                        .name("Generate Test Coverage Report")
+                        ._if("env.TRIGGER_SONAR == 'true'")
+                        .run("npm run test:coverage")
+                        .build()
+                    )
+                    .add_step(
+                        CiStepBuilder::new()
+                        .name("Sonar Scan")
+                        .uses("SonarSource/sonarcloud-github-action@master")
+                        ._if("env.TRIGGER_SONAR == 'true'")
+                        .env(vec![("GITHUB_TOKEN", "${{ secrets.GITHUB_TOKEN }}"), ("SONAR_TOKEN", "${{ secrets.SONAR_TOKEN }}")])
+                        .with(vec![("args", format!("switch>\n            -Dsonar.organization=raboro\n            -Dsonar.projectKey=Raboro_{}\n            -Dsonar.javascript.lcov.reportPaths=./coverage/lcov.info", self.base.name))])
+                        .build()
+                    )
                     .build()
             )
             .build();
@@ -152,7 +197,12 @@ impl Project for MobileAppExpo {
 
         fs::create_file(
             ci_template.to_path_buf(),
-            ci_template.render().unwrap().replace("&amp;#039;", "'"), // sailfish cannot render ' correctly
+            ci_template
+                .render()
+                .unwrap()
+                .replace("&amp;#039;", "'") // sailfish cannot render ' correctly
+                .replace("&amp;gt;", "=") // sailfish cannot render = correctly
+                .replace("switch=", ">"), // sailfish cannot render > correctly
         )
         .expect("Ci cannot be generated");
     }
