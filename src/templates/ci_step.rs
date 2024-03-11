@@ -9,6 +9,7 @@ pub struct CiStep {
     pub uses: Option<String>,
     pub with: Option<Vec<(String, String)>>,
     pub env: Option<Vec<(String, String)>>,
+    pub id: Option<String>,
 }
 
 #[derive(Default, Clone, Debug)]
@@ -34,6 +35,7 @@ pub struct CiStepBuilder<N, R, U> {
     uses: U,
     with: Option<Vec<(String, String)>>,
     env: Option<Vec<(String, String)>>,
+    id: Option<String>,
 }
 
 impl CiStepBuilder<NoName, NoRun, NoUses> {
@@ -49,6 +51,7 @@ impl CiStepBuilder<NoName, NoRun, NoUses> {
             uses: Some(String::from("actions/checkout@v3")),
             with: None,
             env: None,
+            id: None,
         }
     }
 }
@@ -62,6 +65,7 @@ impl CiStepBuilder<Name, Run, NoUses> {
             uses: None,
             with: None,
             env: self.env,
+            id: self.id,
         }
     }
 }
@@ -75,6 +79,7 @@ impl CiStepBuilder<Name, NoRun, Uses> {
             uses: Some(self.uses.0),
             with: self.with,
             env: self.env,
+            id: self.id,
         }
     }
 }
@@ -88,6 +93,7 @@ impl<N, R, U> CiStepBuilder<N, R, U> {
             uses: self.uses,
             with: self.with,
             env: self.env,
+            id: self.id,
         }
     }
 
@@ -98,6 +104,11 @@ impl<N, R, U> CiStepBuilder<N, R, U> {
 
     pub fn env(mut self, env: Vec<(impl Into<String> + Clone, impl Into<String> + Clone)>) -> Self {
         self.env = Some(self.map_vec_values_to_string(env));
+        self
+    }
+
+    pub fn id(mut self, id: impl Into<String>) -> Self {
+        self.id = Some(id.into());
         self
     }
 
@@ -121,6 +132,7 @@ impl<N, R> CiStepBuilder<N, R, NoUses> {
             uses: self.uses,
             with: None,
             env: self.env,
+            id: self.id,
         }
     }
 }
@@ -134,6 +146,7 @@ impl<N, U> CiStepBuilder<N, NoRun, U> {
             uses: Uses(uses.into()),
             with: None,
             env: self.env,
+            id: self.id,
         }
     }
 }
