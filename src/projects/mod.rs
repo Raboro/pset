@@ -15,11 +15,17 @@ pub struct BaseProject {
     name: String,
     year: u16,
     author: String,
+    generate_ci: bool,
 }
 
 impl BaseProject {
-    pub fn new(name: String, year: u16, author: String) -> Self {
-        Self { name, year, author }
+    pub fn new(name: String, year: u16, author: String, generate_ci: bool) -> Self {
+        Self {
+            name,
+            year,
+            author,
+            generate_ci,
+        }
     }
 
     pub fn build(&self) {
