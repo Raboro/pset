@@ -72,6 +72,10 @@ impl Project for MobileAppExpo {
         fs::create_file(eslint_ignore.to_path_buf(), eslint_ignore.render().unwrap())
             .expect("Cannot create .eslintignore");
 
+        if !self.base.generate_ci {
+            return;
+        }
+
         let ci = CiBuilder::new()
             .workflow_name("CI")
             .init_jobs(

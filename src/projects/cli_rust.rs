@@ -26,6 +26,10 @@ impl Project for CliRust {
         self.base.create_license();
         self.base.create_readme();
 
+        if !self.base.generate_ci {
+            return;
+        }
+
         let ci: ci::Ci = CiBuilder::new()
             .workflow_name("CI")
             .init_jobs(

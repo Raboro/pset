@@ -22,22 +22,6 @@ impl Project for CliTs {
     fn build(&self) {
         self.base.build();
 
-        Ci::create_dirs(&self.base.name);
-
-        let ci_template = Template::new(
-            "ci_cd",
-            "yml",
-            Some(".github/workflows"),
-            &self.base.name,
-            CiBuilder::npm_package(),
-        );
-
-        fs::create_file(
-            ci_template.to_path_buf(),
-            ci_template.render().unwrap().replace("&amp;#039;", "'"),
-        )
-        .expect("CI/CD cannot be created");
-
         let eslint = Template::new("eslintrc", "json", None, &self.base.name, CliTsEslint);
 
         fs::create_file(eslint.to_path_buf(), eslint.render().unwrap())
@@ -77,5 +61,25 @@ impl Project for CliTs {
 
         fs::create_file(tsconfig.to_path_buf(), tsconfig.render().unwrap())
             .expect("Cannot create tsconfig");
+
+        if !self.base.generate_ci {
+            return;
+        }
+
+        Ci::create_dirs(&self.base.name);
+
+        let ci_template = Template::new(
+            "ci_cd",
+            "yml",
+            Some(".github/workflows"),
+            &self.base.name,
+            CiBuilder::npm_package(),
+        );
+
+        fs::create_file(
+            ci_template.to_path_buf(),
+            ci_template.render().unwrap().replace("&amp;#039;", "'"),
+        )
+        .expect("CI/CD cannot be created");
     }
 }

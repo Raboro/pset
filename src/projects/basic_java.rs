@@ -68,6 +68,10 @@ impl Project for BasicJava {
         )
         .expect("Pom cannot be generated");
 
+        if !self.base.generate_ci {
+            return;
+        }
+
         let ci: Ci = CiBuilder::new()
             .workflow_name("CI")
             .init_jobs(

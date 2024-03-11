@@ -42,6 +42,36 @@ impl Project for CliC {
         fs::create_file(makefile.to_path_buf(), makefile.render().unwrap())
             .expect("makefile cannot be created");
 
+        let main = Template::new("main", "c", Some("src"), &self.base.name, MainC {});
+
+        fs::create_file(main.to_path_buf(), main.render().unwrap()).expect("Cannot create main");
+
+        let cli_parser = Template::new(
+            "cli_parser",
+            "c",
+            Some("src"),
+            &self.base.name,
+            CliParserC {},
+        );
+
+        fs::create_file(cli_parser.to_path_buf(), cli_parser.render().unwrap())
+            .expect("Cannot create cli_parser.h");
+
+        let cli_parser_h = Template::new(
+            "cli_parser",
+            "h",
+            Some("src"),
+            &self.base.name,
+            CliParserH {},
+        );
+
+        fs::create_file(cli_parser_h.to_path_buf(), cli_parser_h.render().unwrap())
+            .expect("Cannot create cli_parser.h");
+
+        if !self.base.generate_ci {
+            return;
+        }
+
         let ci = CiBuilder::new()
             .workflow_name("Build")
             .init_jobs(
@@ -77,31 +107,5 @@ impl Project for CliC {
 
         fs::create_file(ci_template.to_path_buf(), ci_template.render().unwrap())
             .expect("Cannot create build.yml");
-
-        let main = Template::new("main", "c", Some("src"), &self.base.name, MainC {});
-
-        fs::create_file(main.to_path_buf(), main.render().unwrap()).expect("Cannot create main");
-
-        let cli_parser = Template::new(
-            "cli_parser",
-            "c",
-            Some("src"),
-            &self.base.name,
-            CliParserC {},
-        );
-
-        fs::create_file(cli_parser.to_path_buf(), cli_parser.render().unwrap())
-            .expect("Cannot create cli_parser.h");
-
-        let cli_parser_h = Template::new(
-            "cli_parser",
-            "h",
-            Some("src"),
-            &self.base.name,
-            CliParserH {},
-        );
-
-        fs::create_file(cli_parser_h.to_path_buf(), cli_parser_h.render().unwrap())
-            .expect("Cannot create cli_parser.h");
     }
 }

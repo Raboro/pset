@@ -20,22 +20,6 @@ impl Project for CliJs {
     fn build(&self) {
         self.base.build();
 
-        Ci::create_dirs(&self.base.name);
-
-        let ci_template = Template::new(
-            "ci_cd",
-            "yml",
-            Some(".github/workflows"),
-            &self.base.name,
-            CiBuilder::npm_package(),
-        );
-
-        fs::create_file(
-            ci_template.to_path_buf(),
-            ci_template.render().unwrap().replace("&amp;#039;", "'"),
-        )
-        .expect("CI/CD cannot be created");
-
         fs::create_file(
             PathBuf::from(format!("./{}/.gitignore", self.base.name)),
             String::from("/.idea/\n/node_modules/"),
@@ -73,5 +57,24 @@ impl Project for CliJs {
             ),
         )
         .expect("Cannot create index.js");
+
+        if !self.base.generate_ci {
+            return;
+        }
+        Ci::create_dirs(&self.base.name);
+
+        let ci_template = Template::new(
+            "ci_cd",
+            "yml",
+            Some(".github/workflows"),
+            &self.base.name,
+            CiBuilder::npm_package(),
+        );
+
+        fs::create_file(
+            ci_template.to_path_buf(),
+            ci_template.render().unwrap().replace("&amp;#039;", "'"),
+        )
+        .expect("CI/CD cannot be created");
     }
 }
