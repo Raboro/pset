@@ -8,6 +8,6 @@
 [x] cli_python \
 [x] cli_rust \
 [x] cli_ts \
-[] full_stack_spring_boot_angular \
+[/] full_stack_spring_boot_angular \
 [x] mobile_app_expo \
 [x] obsidian_plugin
