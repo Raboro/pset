@@ -1,6 +1,6 @@
 # pset
 
-CLI tool to generate projects.
+><b>P</b><i>roject</i><b>Set</b><i>up</i> is a CLI tool to generate projects.
 
 ## Usage
 ```bash
